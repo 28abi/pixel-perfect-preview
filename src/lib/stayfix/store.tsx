@@ -4,6 +4,8 @@ import { category, priority, status } from "./config";
 import { buildSeed, CURRENT_USER, PROPERTIES, USERS } from "./seed";
 import type { HistoryType, Incident, Role, Stay, User } from "./types";
 import { canTransition } from "./workflow";
+import { requestAiClassification } from "./ai-classification";
+
 
 // Local data layer. Every mutation goes through these actions so it can later be swapped for backend calls.
 const KEY = "stayfix:v1";
