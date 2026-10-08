@@ -76,7 +76,8 @@ export function StayFixProvider({ children }: { children: ReactNode }) {
     const get = (id: string) => data.incidents.find((i) => i.id === id)!;
     return {
       role, setRole, me, users: USERS, stays: data.stays, incidents: data.incidents, user, property,
-      createIncident: ({ stayId, description, category: cat }) => {
+            createIncident: async ({ stayId, description, category: cat }) => {
+
         const stay = data.stays.find((s) => s.id === stayId)!;
         const max = Math.max(1000, ...data.incidents.map((i) => Number(i.number.slice(3))));
         const at = nowIso();
