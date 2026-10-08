@@ -5,7 +5,6 @@ export type StatusId =
   | "asignada"
   | "en_proceso"
   | "resuelta"
-  | "pendiente_validacion"
   | "cerrada";
 export type CategoryId =
   | "acceso" | "agua" | "electricidad" | "plomeria" | "limpieza" | "ropa_cama"
