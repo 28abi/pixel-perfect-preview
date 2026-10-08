@@ -93,18 +93,7 @@ export function IncidentDetail({ id, role }: { id: string; role: Role }) {
             </section>
           )}
 
-          {/* Director validation */}
-          {role === "director" && inc.status === "pendiente_validacion" && (
-            <section className="panel space-y-3 border-s-validacion p-5">
-              <h2 className="text-sm font-semibold">Validación de la resolución</h2>
-              <p className="rounded-md bg-muted p-3 text-sm">{inc.resolution}</p>
-              <textarea className="field min-h-20" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Notas de validación (opcional para validar, requeridas para rechazar)" />
-              <div className="flex flex-wrap gap-2">
-                <button className="btn btn-primary" onClick={() => run(() => s.validate(inc.id, notes.trim()), "Incidencia validada y cerrada")}><CheckCircle2 className="size-4" /> Validar y cerrar</button>
-                <button className="btn btn-outline" disabled={!notes.trim()} onClick={() => run(() => s.reject(inc.id, notes.trim()), "Devuelta a En proceso")}>Rechazar y devolver</button>
-              </div>
-            </section>
-          )}
+          
 
           {inc.resolution && !(role === "director" && inc.status === "pendiente_validacion") && role !== "guardia" && (
             <section className="panel p-5">
