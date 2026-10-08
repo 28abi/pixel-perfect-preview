@@ -10,33 +10,286 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DirectorRouteImport } from './routes/director'
+import { Route as GuardRouteImport } from './routes/guard'
+import { Route as GuestRouteImport } from './routes/guest'
+import { Route as DirectorIndexRouteImport } from './routes/director.index'
+import { Route as DirectorHistoryRouteImport } from './routes/director.history'
+import { Route as DirectorPerformanceRouteImport } from './routes/director.performance'
+import { Route as DirectorProfileRouteImport } from './routes/director.profile'
+import { Route as GuardIndexRouteImport } from './routes/guard.index'
+import { Route as GuardMineRouteImport } from './routes/guard.mine'
+import { Route as GuardPendingRouteImport } from './routes/guard.pending'
+import { Route as GuardProfileRouteImport } from './routes/guard.profile'
+import { Route as GuestIndexRouteImport } from './routes/guest.index'
+import { Route as GuestProfileRouteImport } from './routes/guest.profile'
+import { Route as GuestReportRouteImport } from './routes/guest.report'
+import { Route as GuestStayRouteImport } from './routes/guest.stay'
+import { Route as DirectorIncidentsIndexRouteImport } from './routes/director.incidents.index'
+import { Route as DirectorIncidentsIdRouteImport } from './routes/director.incidents.$id'
+import { Route as GuardIncidentsIndexRouteImport } from './routes/guard.incidents.index'
+import { Route as GuardIncidentsIdRouteImport } from './routes/guard.incidents.$id'
+import { Route as GuestIncidentsIndexRouteImport } from './routes/guest.incidents.index'
+import { Route as GuestIncidentsIdRouteImport } from './routes/guest.incidents.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DirectorRoute = DirectorRouteImport.update({
+  id: '/director',
+  path: '/director',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GuardRoute = GuardRouteImport.update({
+  id: '/guard',
+  path: '/guard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GuestRoute = GuestRouteImport.update({
+  id: '/guest',
+  path: '/guest',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DirectorIndexRoute = DirectorIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DirectorRoute,
+} as any)
+const DirectorHistoryRoute = DirectorHistoryRouteImport.update({
+  id: '/history',
+  path: '/history',
+  getParentRoute: () => DirectorRoute,
+} as any)
+const DirectorPerformanceRoute = DirectorPerformanceRouteImport.update({
+  id: '/performance',
+  path: '/performance',
+  getParentRoute: () => DirectorRoute,
+} as any)
+const DirectorProfileRoute = DirectorProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => DirectorRoute,
+} as any)
+const GuardIndexRoute = GuardIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => GuardRoute,
+} as any)
+const GuardMineRoute = GuardMineRouteImport.update({
+  id: '/mine',
+  path: '/mine',
+  getParentRoute: () => GuardRoute,
+} as any)
+const GuardPendingRoute = GuardPendingRouteImport.update({
+  id: '/pending',
+  path: '/pending',
+  getParentRoute: () => GuardRoute,
+} as any)
+const GuardProfileRoute = GuardProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => GuardRoute,
+} as any)
+const GuestIndexRoute = GuestIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => GuestRoute,
+} as any)
+const GuestProfileRoute = GuestProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => GuestRoute,
+} as any)
+const GuestReportRoute = GuestReportRouteImport.update({
+  id: '/report',
+  path: '/report',
+  getParentRoute: () => GuestRoute,
+} as any)
+const GuestStayRoute = GuestStayRouteImport.update({
+  id: '/stay',
+  path: '/stay',
+  getParentRoute: () => GuestRoute,
+} as any)
+const DirectorIncidentsIndexRoute = DirectorIncidentsIndexRouteImport.update({
+  id: '/incidents/',
+  path: '/incidents/',
+  getParentRoute: () => DirectorRoute,
+} as any)
+const DirectorIncidentsIdRoute = DirectorIncidentsIdRouteImport.update({
+  id: '/incidents/$id',
+  path: '/incidents/$id',
+  getParentRoute: () => DirectorRoute,
+} as any)
+const GuardIncidentsIndexRoute = GuardIncidentsIndexRouteImport.update({
+  id: '/incidents/',
+  path: '/incidents/',
+  getParentRoute: () => GuardRoute,
+} as any)
+const GuardIncidentsIdRoute = GuardIncidentsIdRouteImport.update({
+  id: '/incidents/$id',
+  path: '/incidents/$id',
+  getParentRoute: () => GuardRoute,
+} as any)
+const GuestIncidentsIndexRoute = GuestIncidentsIndexRouteImport.update({
+  id: '/incidents/',
+  path: '/incidents/',
+  getParentRoute: () => GuestRoute,
+} as any)
+const GuestIncidentsIdRoute = GuestIncidentsIdRouteImport.update({
+  id: '/incidents/$id',
+  path: '/incidents/$id',
+  getParentRoute: () => GuestRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/director': typeof DirectorRouteWithChildren
+  '/guard': typeof GuardRouteWithChildren
+  '/guest': typeof GuestRouteWithChildren
+  '/director/history': typeof DirectorHistoryRoute
+  '/director/performance': typeof DirectorPerformanceRoute
+  '/director/profile': typeof DirectorProfileRoute
+  '/guard/mine': typeof GuardMineRoute
+  '/guard/pending': typeof GuardPendingRoute
+  '/guard/profile': typeof GuardProfileRoute
+  '/guest/profile': typeof GuestProfileRoute
+  '/guest/report': typeof GuestReportRoute
+  '/guest/stay': typeof GuestStayRoute
+  '/director/': typeof DirectorIndexRoute
+  '/guard/': typeof GuardIndexRoute
+  '/guest/': typeof GuestIndexRoute
+  '/director/incidents/$id': typeof DirectorIncidentsIdRoute
+  '/guard/incidents/$id': typeof GuardIncidentsIdRoute
+  '/guest/incidents/$id': typeof GuestIncidentsIdRoute
+  '/director/incidents/': typeof DirectorIncidentsIndexRoute
+  '/guard/incidents/': typeof GuardIncidentsIndexRoute
+  '/guest/incidents/': typeof GuestIncidentsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/director/history': typeof DirectorHistoryRoute
+  '/director/performance': typeof DirectorPerformanceRoute
+  '/director/profile': typeof DirectorProfileRoute
+  '/guard/mine': typeof GuardMineRoute
+  '/guard/pending': typeof GuardPendingRoute
+  '/guard/profile': typeof GuardProfileRoute
+  '/guest/profile': typeof GuestProfileRoute
+  '/guest/report': typeof GuestReportRoute
+  '/guest/stay': typeof GuestStayRoute
+  '/director': typeof DirectorIndexRoute
+  '/guard': typeof GuardIndexRoute
+  '/guest': typeof GuestIndexRoute
+  '/director/incidents/$id': typeof DirectorIncidentsIdRoute
+  '/guard/incidents/$id': typeof GuardIncidentsIdRoute
+  '/guest/incidents/$id': typeof GuestIncidentsIdRoute
+  '/director/incidents': typeof DirectorIncidentsIndexRoute
+  '/guard/incidents': typeof GuardIncidentsIndexRoute
+  '/guest/incidents': typeof GuestIncidentsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/director': typeof DirectorRouteWithChildren
+  '/guard': typeof GuardRouteWithChildren
+  '/guest': typeof GuestRouteWithChildren
+  '/director/history': typeof DirectorHistoryRoute
+  '/director/performance': typeof DirectorPerformanceRoute
+  '/director/profile': typeof DirectorProfileRoute
+  '/guard/mine': typeof GuardMineRoute
+  '/guard/pending': typeof GuardPendingRoute
+  '/guard/profile': typeof GuardProfileRoute
+  '/guest/profile': typeof GuestProfileRoute
+  '/guest/report': typeof GuestReportRoute
+  '/guest/stay': typeof GuestStayRoute
+  '/director/': typeof DirectorIndexRoute
+  '/guard/': typeof GuardIndexRoute
+  '/guest/': typeof GuestIndexRoute
+  '/director/incidents/$id': typeof DirectorIncidentsIdRoute
+  '/guard/incidents/$id': typeof GuardIncidentsIdRoute
+  '/guest/incidents/$id': typeof GuestIncidentsIdRoute
+  '/director/incidents/': typeof DirectorIncidentsIndexRoute
+  '/guard/incidents/': typeof GuardIncidentsIndexRoute
+  '/guest/incidents/': typeof GuestIncidentsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/director'
+    | '/guard'
+    | '/guest'
+    | '/director/history'
+    | '/director/performance'
+    | '/director/profile'
+    | '/guard/mine'
+    | '/guard/pending'
+    | '/guard/profile'
+    | '/guest/profile'
+    | '/guest/report'
+    | '/guest/stay'
+    | '/director/'
+    | '/guard/'
+    | '/guest/'
+    | '/director/incidents/$id'
+    | '/guard/incidents/$id'
+    | '/guest/incidents/$id'
+    | '/director/incidents/'
+    | '/guard/incidents/'
+    | '/guest/incidents/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/director/history'
+    | '/director/performance'
+    | '/director/profile'
+    | '/guard/mine'
+    | '/guard/pending'
+    | '/guard/profile'
+    | '/guest/profile'
+    | '/guest/report'
+    | '/guest/stay'
+    | '/director'
+    | '/guard'
+    | '/guest'
+    | '/director/incidents/$id'
+    | '/guard/incidents/$id'
+    | '/guest/incidents/$id'
+    | '/director/incidents'
+    | '/guard/incidents'
+    | '/guest/incidents'
+  id:
+    | '__root__'
+    | '/'
+    | '/director'
+    | '/guard'
+    | '/guest'
+    | '/director/history'
+    | '/director/performance'
+    | '/director/profile'
+    | '/guard/mine'
+    | '/guard/pending'
+    | '/guard/profile'
+    | '/guest/profile'
+    | '/guest/report'
+    | '/guest/stay'
+    | '/director/'
+    | '/guard/'
+    | '/guest/'
+    | '/director/incidents/$id'
+    | '/guard/incidents/$id'
+    | '/guest/incidents/$id'
+    | '/director/incidents/'
+    | '/guard/incidents/'
+    | '/guest/incidents/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DirectorRoute: typeof DirectorRouteWithChildren
+  GuardRoute: typeof GuardRouteWithChildren
+  GuestRoute: typeof GuestRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +301,223 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/director': {
+      id: '/director'
+      path: '/director'
+      fullPath: '/director'
+      preLoaderRoute: typeof DirectorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/guard': {
+      id: '/guard'
+      path: '/guard'
+      fullPath: '/guard'
+      preLoaderRoute: typeof GuardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/guest': {
+      id: '/guest'
+      path: '/guest'
+      fullPath: '/guest'
+      preLoaderRoute: typeof GuestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/director/': {
+      id: '/director/'
+      path: '/'
+      fullPath: '/director/'
+      preLoaderRoute: typeof DirectorIndexRouteImport
+      parentRoute: typeof DirectorRoute
+    }
+    '/director/history': {
+      id: '/director/history'
+      path: '/history'
+      fullPath: '/director/history'
+      preLoaderRoute: typeof DirectorHistoryRouteImport
+      parentRoute: typeof DirectorRoute
+    }
+    '/director/performance': {
+      id: '/director/performance'
+      path: '/performance'
+      fullPath: '/director/performance'
+      preLoaderRoute: typeof DirectorPerformanceRouteImport
+      parentRoute: typeof DirectorRoute
+    }
+    '/director/profile': {
+      id: '/director/profile'
+      path: '/profile'
+      fullPath: '/director/profile'
+      preLoaderRoute: typeof DirectorProfileRouteImport
+      parentRoute: typeof DirectorRoute
+    }
+    '/guard/': {
+      id: '/guard/'
+      path: '/'
+      fullPath: '/guard/'
+      preLoaderRoute: typeof GuardIndexRouteImport
+      parentRoute: typeof GuardRoute
+    }
+    '/guard/mine': {
+      id: '/guard/mine'
+      path: '/mine'
+      fullPath: '/guard/mine'
+      preLoaderRoute: typeof GuardMineRouteImport
+      parentRoute: typeof GuardRoute
+    }
+    '/guard/pending': {
+      id: '/guard/pending'
+      path: '/pending'
+      fullPath: '/guard/pending'
+      preLoaderRoute: typeof GuardPendingRouteImport
+      parentRoute: typeof GuardRoute
+    }
+    '/guard/profile': {
+      id: '/guard/profile'
+      path: '/profile'
+      fullPath: '/guard/profile'
+      preLoaderRoute: typeof GuardProfileRouteImport
+      parentRoute: typeof GuardRoute
+    }
+    '/guest/': {
+      id: '/guest/'
+      path: '/'
+      fullPath: '/guest/'
+      preLoaderRoute: typeof GuestIndexRouteImport
+      parentRoute: typeof GuestRoute
+    }
+    '/guest/profile': {
+      id: '/guest/profile'
+      path: '/profile'
+      fullPath: '/guest/profile'
+      preLoaderRoute: typeof GuestProfileRouteImport
+      parentRoute: typeof GuestRoute
+    }
+    '/guest/report': {
+      id: '/guest/report'
+      path: '/report'
+      fullPath: '/guest/report'
+      preLoaderRoute: typeof GuestReportRouteImport
+      parentRoute: typeof GuestRoute
+    }
+    '/guest/stay': {
+      id: '/guest/stay'
+      path: '/stay'
+      fullPath: '/guest/stay'
+      preLoaderRoute: typeof GuestStayRouteImport
+      parentRoute: typeof GuestRoute
+    }
+    '/director/incidents/': {
+      id: '/director/incidents/'
+      path: '/incidents'
+      fullPath: '/director/incidents/'
+      preLoaderRoute: typeof DirectorIncidentsIndexRouteImport
+      parentRoute: typeof DirectorRoute
+    }
+    '/director/incidents/$id': {
+      id: '/director/incidents/$id'
+      path: '/incidents/$id'
+      fullPath: '/director/incidents/$id'
+      preLoaderRoute: typeof DirectorIncidentsIdRouteImport
+      parentRoute: typeof DirectorRoute
+    }
+    '/guard/incidents/': {
+      id: '/guard/incidents/'
+      path: '/incidents'
+      fullPath: '/guard/incidents/'
+      preLoaderRoute: typeof GuardIncidentsIndexRouteImport
+      parentRoute: typeof GuardRoute
+    }
+    '/guard/incidents/$id': {
+      id: '/guard/incidents/$id'
+      path: '/incidents/$id'
+      fullPath: '/guard/incidents/$id'
+      preLoaderRoute: typeof GuardIncidentsIdRouteImport
+      parentRoute: typeof GuardRoute
+    }
+    '/guest/incidents/': {
+      id: '/guest/incidents/'
+      path: '/incidents'
+      fullPath: '/guest/incidents/'
+      preLoaderRoute: typeof GuestIncidentsIndexRouteImport
+      parentRoute: typeof GuestRoute
+    }
+    '/guest/incidents/$id': {
+      id: '/guest/incidents/$id'
+      path: '/incidents/$id'
+      fullPath: '/guest/incidents/$id'
+      preLoaderRoute: typeof GuestIncidentsIdRouteImport
+      parentRoute: typeof GuestRoute
+    }
   }
 }
 
+interface DirectorRouteChildren {
+  DirectorHistoryRoute: typeof DirectorHistoryRoute
+  DirectorPerformanceRoute: typeof DirectorPerformanceRoute
+  DirectorProfileRoute: typeof DirectorProfileRoute
+  DirectorIndexRoute: typeof DirectorIndexRoute
+  DirectorIncidentsIdRoute: typeof DirectorIncidentsIdRoute
+  DirectorIncidentsIndexRoute: typeof DirectorIncidentsIndexRoute
+}
+
+const DirectorRouteChildren: DirectorRouteChildren = {
+  DirectorHistoryRoute: DirectorHistoryRoute,
+  DirectorPerformanceRoute: DirectorPerformanceRoute,
+  DirectorProfileRoute: DirectorProfileRoute,
+  DirectorIndexRoute: DirectorIndexRoute,
+  DirectorIncidentsIdRoute: DirectorIncidentsIdRoute,
+  DirectorIncidentsIndexRoute: DirectorIncidentsIndexRoute,
+}
+
+const DirectorRouteWithChildren = DirectorRoute._addFileChildren(
+  DirectorRouteChildren,
+)
+
+interface GuardRouteChildren {
+  GuardMineRoute: typeof GuardMineRoute
+  GuardPendingRoute: typeof GuardPendingRoute
+  GuardProfileRoute: typeof GuardProfileRoute
+  GuardIndexRoute: typeof GuardIndexRoute
+  GuardIncidentsIdRoute: typeof GuardIncidentsIdRoute
+  GuardIncidentsIndexRoute: typeof GuardIncidentsIndexRoute
+}
+
+const GuardRouteChildren: GuardRouteChildren = {
+  GuardMineRoute: GuardMineRoute,
+  GuardPendingRoute: GuardPendingRoute,
+  GuardProfileRoute: GuardProfileRoute,
+  GuardIndexRoute: GuardIndexRoute,
+  GuardIncidentsIdRoute: GuardIncidentsIdRoute,
+  GuardIncidentsIndexRoute: GuardIncidentsIndexRoute,
+}
+
+const GuardRouteWithChildren = GuardRoute._addFileChildren(GuardRouteChildren)
+
+interface GuestRouteChildren {
+  GuestProfileRoute: typeof GuestProfileRoute
+  GuestReportRoute: typeof GuestReportRoute
+  GuestStayRoute: typeof GuestStayRoute
+  GuestIndexRoute: typeof GuestIndexRoute
+  GuestIncidentsIdRoute: typeof GuestIncidentsIdRoute
+  GuestIncidentsIndexRoute: typeof GuestIncidentsIndexRoute
+}
+
+const GuestRouteChildren: GuestRouteChildren = {
+  GuestProfileRoute: GuestProfileRoute,
+  GuestReportRoute: GuestReportRoute,
+  GuestStayRoute: GuestStayRoute,
+  GuestIndexRoute: GuestIndexRoute,
+  GuestIncidentsIdRoute: GuestIncidentsIdRoute,
+  GuestIncidentsIndexRoute: GuestIncidentsIndexRoute,
+}
+
+const GuestRouteWithChildren = GuestRoute._addFileChildren(GuestRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DirectorRoute: DirectorRouteWithChildren,
+  GuardRoute: GuardRouteWithChildren,
+  GuestRoute: GuestRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
