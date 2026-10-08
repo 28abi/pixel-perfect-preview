@@ -88,9 +88,26 @@ export function StayFixProvider({ children }: { children: ReactNode }) {
           history: [{ id: uid(), type: "creada", userId: me.id, at, detail: "Incidencia reportada por el huésped" }],
           ai: null, // future: automated suggestion of category/priority with rationale
         };
-        setData((d) => ({ ...d, incidents: [inc, ...d.incidents] }));
+                setData((d) => ({ ...d, incidents: [inc, ...d.incidents] }));
+
+        const suggestion = await requestAiClassification(description);
+        if (suggestion) {
+          const ai: Incident["ai"] = {
+            category: suggestion.category,
+            priority: suggestion.priority,
+            rationale: suggestion.rationale,
+            state: "pendiente",
+          };
+          setData((d) => ({
+            ...d,
+            incidents: d.incidents.map((item) => item.id === inc.id ? { ...item, ai } : item),
+          }));
+          return { ...inc, ai };
+        }
+
         return inc;
       },
+
             assign: (id, userId) => {
         if (role === "guardia" && userId !== me.id) return "Un guardia solo puede asignarse la incidencia a sí mismo";
         if (role !== "director" && role !== "guardia") return "No tienes permiso para asignar incidencias";
