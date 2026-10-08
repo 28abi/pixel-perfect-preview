@@ -2,7 +2,7 @@ import { Link, Outlet, useNavigate } from "@tanstack/react-router";
 import {
   BarChart3, ClipboardList, Gauge, History, Home, Hourglass, LogOut, Menu, PlusCircle, User, Wrench, BedDouble, ListChecks, X,
 } from "lucide-react";
-import { useState, type ComponentType } from "react";
+import { useEffect, useState, type ComponentType } from "react";
 import { useStayFix } from "@/lib/stayfix/store";
 import type { Role } from "@/lib/stayfix/types";
 
@@ -38,7 +38,7 @@ export function AppShell({ role }: { role: Role }) {
   const { me, setRole, role: current } = useStayFix();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-  if (current !== role) setTimeout(() => setRole(role));
+  useEffect(() => { if (current !== role) setRole(role); }, [current, role, setRole]);
 
   const nav = (
     <nav className="flex flex-col gap-0.5">
