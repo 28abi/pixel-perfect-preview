@@ -7,15 +7,13 @@ export const TRANSITIONS: Record<StatusId, { to: StatusId; roles: Role[] }[]> = 
   nueva: [{ to: "asignada", roles: ["guardia", "director"] }],
   asignada: [{ to: "en_proceso", roles: ["guardia"] }],
   en_proceso: [{ to: "resuelta", roles: ["guardia"] }],
-  resuelta: [
-    { to: "pendiente_validacion", roles: ["guardia"] },
-    { to: "en_proceso", roles: ["guardia"] },
+    resuelta: [
+    { to: "cerrada", roles: ["guardia", "director"] },
+    { to: "en_proceso", roles: ["guardia", "director"] },
   ],
-  pendiente_validacion: [
-    { to: "cerrada", roles: ["director"] },
-    { to: "en_proceso", roles: ["director"] },
+  cerrada: [
+    { to: "en_proceso", roles: ["guardia", "director"] },
   ],
-  cerrada: [],
 };
 
 export function canTransition(inc: Incident, to: StatusId, role: Role): string | null {
@@ -24,8 +22,7 @@ export function canTransition(inc: Incident, to: StatusId, role: Role): string |
   if ((to === "asignada" || to === "en_proceso" || to === "resuelta") && !inc.assigneeId)
     return "La incidencia necesita un responsable.";
   if (to === "resuelta" && !inc.resolution?.trim()) return "Registra la descripción de la resolución.";
-  if (to === "cerrada" && !inc.validation) return "La incidencia debe validarse antes de cerrarse.";
-  return null;
+    return null;
 }
 
 const mins = (a: string, b: string | number) => (new Date(b).getTime() - new Date(a).getTime()) / 60000;

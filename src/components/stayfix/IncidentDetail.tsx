@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowLeft, Bot, CheckCircle2, Clock, Paperclip, Sparkles } from "lucide-react";
+import { ArrowLeft, Bot, Clock, Paperclip, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { CATEGORIES, PRIORITIES, category, priority, status, type CategoryId, type PriorityId } from "@/lib/stayfix/config";
@@ -15,8 +15,7 @@ export function IncidentDetail({ id, role }: { id: string; role: Role }) {
   const inc = s.incidents.find((i) => i.id === id);
   const [comment, setComment] = useState("");
   const [resolution, setResolution] = useState(inc?.resolution ?? "");
-    const [notes, setNotes] = useState("");
-  const [aiCategory, setAiCategory] = useState<CategoryId | null>(null);
+      const [aiCategory, setAiCategory] = useState<CategoryId | null>(null);
   const [aiPriority, setAiPriority] = useState<PriorityId | null>(null);
   if (!inc) return <Empty>Incidencia no encontrada.</Empty>;
 
@@ -29,7 +28,7 @@ export function IncidentDetail({ id, role }: { id: string; role: Role }) {
     if (err) toast.error(err); else toast.success(ok);
   };
 
-  const transitions = TRANSITIONS[inc.status].filter((t) => t.roles.includes(role) && !(role === "director" && t.to === "en_proceso") && t.to !== "asignada");
+    const transitions = TRANSITIONS[inc.status].filter((t) => t.roles.includes(role) && t.to !== "asignada");
 
   return (
     <div>
@@ -94,18 +93,7 @@ export function IncidentDetail({ id, role }: { id: string; role: Role }) {
             </section>
           )}
 
-          {/* Director validation */}
-          {role === "director" && inc.status === "pendiente_validacion" && (
-            <section className="panel space-y-3 border-s-validacion p-5">
-              <h2 className="text-sm font-semibold">Validación de la resolución</h2>
-              <p className="rounded-md bg-muted p-3 text-sm">{inc.resolution}</p>
-              <textarea className="field min-h-20" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Notas de validación (opcional para validar, requeridas para rechazar)" />
-              <div className="flex flex-wrap gap-2">
-                <button className="btn btn-primary" onClick={() => run(() => s.validate(inc.id, notes.trim()), "Incidencia validada y cerrada")}><CheckCircle2 className="size-4" /> Validar y cerrar</button>
-                <button className="btn btn-outline" disabled={!notes.trim()} onClick={() => run(() => s.reject(inc.id, notes.trim()), "Devuelta a En proceso")}>Rechazar y devolver</button>
-              </div>
-            </section>
-          )}
+          
 
           {inc.resolution && !(role === "director" && inc.status === "pendiente_validacion") && role !== "guardia" && (
             <section className="panel p-5">

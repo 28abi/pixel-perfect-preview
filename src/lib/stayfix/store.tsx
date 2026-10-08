@@ -32,9 +32,7 @@ interface Ctx {
   dismissAiSuggestion: (id: string) => string | null;
   transition: (id: string, to: StatusId) => string | null;
   saveResolution: (id: string, text: string) => void;
-  validate: (id: string, notes: string) => void;
-  reject: (id: string, notes: string) => void;
-  addComment: (id: string, text: string) => void;
+    addComment: (id: string, text: string) => void;
   addEvidence: (id: string, name: string) => void;
   resetDemo: () => void;
 }
@@ -150,10 +148,12 @@ export function StayFixProvider({ children }: { children: ReactNode }) {
         if (err) return err;
         const at = nowIso();
         mutate(id, (i) => ({
-          ...i, status: to,
+                    ...i,
+          status: to,
           startedAt: to === "en_proceso" && !i.startedAt ? at : i.startedAt,
-          resolvedAt: to === "resuelta" ? at : i.resolvedAt,
-          closedAt: to === "cerrada" ? at : i.closedAt,
+          resolvedAt: to === "resuelta" ? at : to === "en_proceso" && i.status === "cerrada" ? null : i.resolvedAt,
+          closedAt: to === "cerrada" ? at : to === "en_proceso" && i.status === "cerrada" ? null : i.closedAt,
+          resolution: to === "en_proceso" && i.status === "cerrada" ? null : i.resolution,
         }), {
           type: to === "en_proceso" && !get(id).startedAt ? "inicio" : to === "cerrada" ? "cierre" : "estado",
           detail: `Estado: ${status(get(id).status).label} → ${status(to).label}`,
@@ -161,14 +161,7 @@ export function StayFixProvider({ children }: { children: ReactNode }) {
         return null;
       },
       saveResolution: (id, text) => mutate(id, (i) => ({ ...i, resolution: text }), { type: "resolucion", detail: "Resolución registrada" }),
-      validate: (id, notes) => {
-        const at = nowIso();
-        mutate(id, (i) => ({ ...i, validation: { userId: me.id, at, notes } }), { type: "validacion", detail: notes ? `Resolución validada: ${notes}` : "Resolución validada" });
-        // Closing only happens after the validation record exists.
-        mutate(id, (i) => (i.validation ? { ...i, status: "cerrada", closedAt: at } : i), { type: "cierre", detail: "Incidencia cerrada" });
-      },
-      reject: (id, notes) => mutate(id, (i) => ({ ...i, status: "en_proceso", validation: null, resolvedAt: null }), { type: "rechazo", detail: `Validación rechazada: ${notes || "sin notas"}` }),
-      addComment: (id, text) => mutate(id, (i) => ({ ...i, comments: [...i.comments, { id: uid(), userId: me.id, text, at: nowIso() }] }), { type: "comentario", detail: text }),
+            addComment: (id, text) => mutate(id, (i) => ({ ...i, comments: [...i.comments, { id: uid(), userId: me.id, text, at: nowIso() }] }), { type: "comentario", detail: text }),
       addEvidence: (id, name) => mutate(id, (i) => ({ ...i, evidence: [...i.evidence, { id: uid(), name, userId: me.id, at: nowIso() }] }), { type: "evidencia", detail: `Evidencia adjunta: ${name}` }),
       resetDemo: () => setData(buildSeed()),
     };
