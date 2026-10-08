@@ -27,7 +27,9 @@ interface Ctx {
 
   assign: (id: string, userId: string) => void;
   setPriority: (id: string, p: PriorityId) => void;
-  setCategory: (id: string, c: CategoryId) => void;
+    setCategory: (id: string, c: CategoryId) => void;
+  applyAiSuggestion: (id: string, category: CategoryId, priority: PriorityId) => string | null;
+  dismissAiSuggestion: (id: string) => string | null;
   transition: (id: string, to: StatusId) => string | null;
   saveResolution: (id: string, text: string) => void;
   validate: (id: string, notes: string) => void;
