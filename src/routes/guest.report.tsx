@@ -22,7 +22,7 @@ function Report() {
       <PageHeader title="Reportar incidencia" subtitle="Cuéntanos qué pasa. El equipo de operación lo revisará y asignará." />
       <form
         className="panel space-y-5 p-6"
-        onSubmit={(e) => {
+        onSubmit={async (e) => {
           e.preventDefault();
                     const inc = await createIncident({ stayId, description: desc.trim(), category: cat });
 
