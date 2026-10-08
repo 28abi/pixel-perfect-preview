@@ -15,8 +15,7 @@ export function IncidentDetail({ id, role }: { id: string; role: Role }) {
   const inc = s.incidents.find((i) => i.id === id);
   const [comment, setComment] = useState("");
   const [resolution, setResolution] = useState(inc?.resolution ?? "");
-    const [notes, setNotes] = useState("");
-  const [aiCategory, setAiCategory] = useState<CategoryId | null>(null);
+      const [aiCategory, setAiCategory] = useState<CategoryId | null>(null);
   const [aiPriority, setAiPriority] = useState<PriorityId | null>(null);
   if (!inc) return <Empty>Incidencia no encontrada.</Empty>;
 
