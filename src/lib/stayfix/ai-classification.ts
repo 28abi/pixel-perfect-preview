@@ -9,6 +9,8 @@ export interface ValidatedAiClassification {
 const categoryIds = new Set<CategoryId>(CATEGORIES.map((item) => item.id));
 const priorityIds = new Set<PriorityId>(PRIORITIES.map((item) => item.id));
 
+const GAS_RISK_PATTERN = /\b(?:gas|olor\s+a\s+gas|huele(?:\s+\w+){0,3}\s+a\s+gas|fuga\s+de\s+gas|escape\s+de\s+gas|posible\s+fuga)\b/;
+
 const normalizeDescription = (description: string) =>
   description.normalize("NFD").replace(/[\\u0300-\\u036f]/g, "").toLowerCase();
 
