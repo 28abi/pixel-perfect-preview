@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowLeft, Bot, CheckCircle2, Clock, Paperclip, Sparkles } from "lucide-react";
+import { ArrowLeft, Bot, Clock, Paperclip, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { CATEGORIES, PRIORITIES, category, priority, status, type CategoryId, type PriorityId } from "@/lib/stayfix/config";
