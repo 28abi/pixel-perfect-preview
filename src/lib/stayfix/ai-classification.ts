@@ -81,8 +81,8 @@ function isRecord(value: unknown): value is Record<string, unknown> {
  * can continue without trusting arbitrary model output.
  */
 export async function requestAiClassification(description: string): Promise<ValidatedAiClassification | null> {
-  const endpoint = import.meta.env.VITE_AI_CLASSIFICATION_URL;
-  if (!endpoint) return null;
+    const endpoint = import.meta.env.VITE_AI_CLASSIFICATION_URL;
+  if (!endpoint) return localClassification(description);
 
   try {
     const response = await fetch(endpoint, {
