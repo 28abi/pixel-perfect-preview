@@ -88,9 +88,13 @@ export function StayFixProvider({ children }: { children: ReactNode }) {
         setData((d) => ({ ...d, incidents: [inc, ...d.incidents] }));
         return inc;
       },
-      assign: (id, userId) => {
+            assign: (id, userId) => {
+        if (role === "guardia" && userId !== me.id) return "Un guardia solo puede asignarse la incidencia a sí mismo";
+        if (role !== "director" && role !== "guardia") return "No tienes permiso para asignar incidencias";
+        const assignee = USERS.find((u) => u.id === userId);
+        if (!assignee || assignee.role !== "guardia") return "Solo se puede asignar a un guardia";
         const inc = get(id);
-        const name = USERS.find((u) => u.id === userId)!.name;
+        const name = assignee.name;
         const re = !!inc.assigneeId;
         mutate(id, (i) => ({
           ...i, assigneeId: userId, assignedAt: nowIso(),
