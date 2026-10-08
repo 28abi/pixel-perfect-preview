@@ -161,14 +161,7 @@ export function StayFixProvider({ children }: { children: ReactNode }) {
         return null;
       },
       saveResolution: (id, text) => mutate(id, (i) => ({ ...i, resolution: text }), { type: "resolucion", detail: "Resolución registrada" }),
-      validate: (id, notes) => {
-        const at = nowIso();
-        mutate(id, (i) => ({ ...i, validation: { userId: me.id, at, notes } }), { type: "validacion", detail: notes ? `Resolución validada: ${notes}` : "Resolución validada" });
-        // Closing only happens after the validation record exists.
-        mutate(id, (i) => (i.validation ? { ...i, status: "cerrada", closedAt: at } : i), { type: "cierre", detail: "Incidencia cerrada" });
-      },
-      reject: (id, notes) => mutate(id, (i) => ({ ...i, status: "en_proceso", validation: null, resolvedAt: null }), { type: "rechazo", detail: `Validación rechazada: ${notes || "sin notas"}` }),
-      addComment: (id, text) => mutate(id, (i) => ({ ...i, comments: [...i.comments, { id: uid(), userId: me.id, text, at: nowIso() }] }), { type: "comentario", detail: text }),
+            addComment: (id, text) => mutate(id, (i) => ({ ...i, comments: [...i.comments, { id: uid(), userId: me.id, text, at: nowIso() }] }), { type: "comentario", detail: text }),
       addEvidence: (id, name) => mutate(id, (i) => ({ ...i, evidence: [...i.evidence, { id: uid(), name, userId: me.id, at: nowIso() }] }), { type: "evidencia", detail: `Evidencia adjunta: ${name}` }),
       resetDemo: () => setData(buildSeed()),
     };
