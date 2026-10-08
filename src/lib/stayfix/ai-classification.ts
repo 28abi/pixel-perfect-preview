@@ -29,10 +29,11 @@ export async function requestAiClassification(description: string): Promise<Vali
       body: JSON.stringify({ description }),
       signal: AbortSignal.timeout(8000),
     });
-    if (!response.ok) return null;
-    return parseAiClassification(await response.json());
+        if (!response.ok) return localClassification(description);
+    const suggestion = parseAiClassification(await response.json());
+    return suggestion ? applySafetyOverrides(description, suggestion) : localClassification(description);
   } catch {
-    return null;
+    return localClassification(description);
   }
 }
 
