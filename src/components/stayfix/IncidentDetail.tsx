@@ -153,12 +153,16 @@ export function IncidentDetail({ id, role }: { id: string; role: Role }) {
             <Info label="Propiedad" value={`${prop.name} — ${prop.address}`} />
             {staff ? (
               <>
-                <div>
+                                <div>
                   <p className="text-xs text-muted-foreground">Responsable</p>
-                  <select className="field mt-1" value={inc.assigneeId ?? ""} disabled={inc.status === "cerrada"} onChange={(e) => e.target.value && run(() => s.assign(inc.id, e.target.value), "Responsable actualizado")}>
-                    <option value="">Sin asignar</option>
-                    {guards.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}
-                  </select>
+                  {role === "director" ? (
+                    <select className="field mt-1" value={inc.assigneeId ?? ""} disabled={inc.status === "cerrada"} onChange={(e) => e.target.value && run(() => s.assign(inc.id, e.target.value), "Responsable actualizado")}>
+                      <option value="">Sin asignar</option>
+                      {guards.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}
+                    </select>
+                  ) : (
+                    <p className="font-medium">{s.user(inc.assigneeId)?.name ?? "Pendiente de asignar"}</p>
+                  )}
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground">Prioridad</p>
