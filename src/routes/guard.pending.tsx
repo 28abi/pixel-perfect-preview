@@ -11,8 +11,8 @@ function Page() {
       <PageHeader title="Pendientes" subtitle="Sin asignar y en espera de validación del director." />
       <h2 className="mb-3 text-sm font-semibold">Sin asignar</h2>
       <IncidentTable items={incidents.filter((i) => !i.assigneeId && i.status !== "cerrada")} base="/guard/incidents" />
-      <h2 className="mb-3 mt-8 text-sm font-semibold">Pendientes de validación</h2>
-      <IncidentTable items={incidents.filter((i) => i.status === "pendiente_validacion" || i.status === "resuelta")} base="/guard/incidents" />
+            <h2 className="mb-3 mt-8 text-sm font-semibold">Resueltas</h2>
+      <IncidentTable items={incidents.filter((i) => i.status === "resuelta")} base="/guard/incidents" />
     </div>
   );
 }
