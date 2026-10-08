@@ -15,7 +15,9 @@ export function IncidentDetail({ id, role }: { id: string; role: Role }) {
   const inc = s.incidents.find((i) => i.id === id);
   const [comment, setComment] = useState("");
   const [resolution, setResolution] = useState(inc?.resolution ?? "");
-  const [notes, setNotes] = useState("");
+    const [notes, setNotes] = useState("");
+  const [aiCategory, setAiCategory] = useState<CategoryId | null>(null);
+  const [aiPriority, setAiPriority] = useState<PriorityId | null>(null);
   if (!inc) return <Empty>Incidencia no encontrada.</Empty>;
 
   const staff = role !== "huesped";
@@ -195,16 +197,32 @@ export function IncidentDetail({ id, role }: { id: string; role: Role }) {
             ) : <p className="text-xs text-muted-foreground">Sin evidencia.</p>}
           </section>
 
-          {staff && (
+                    {staff && (
             <section className="panel border-dashed p-5 text-sm">
               <h2 className="flex items-center gap-1.5 font-semibold"><Sparkles className="size-4 text-signal" /> Sugerencia asistida</h2>
               {inc.ai ? (
-                <div className="mt-2 space-y-1 text-xs">
-                  <p>Categoría: <b>{category(inc.ai.category).label}</b> · Prioridad: <b>{priority(inc.ai.priority).label}</b></p>
+                <div className="mt-2 space-y-3 text-xs">
+                  <p>Categoría y prioridad sugeridas por IA. Revisa o modifica antes de aplicarlas.</p>
+                  <div className="grid gap-2 sm:grid-cols-2">
+                    <select className="field" value={aiCategory ?? inc.ai.category} disabled={inc.ai.state !== "pendiente" || inc.status === "cerrada"} onChange={(e) => setAiCategory(e.target.value as CategoryId)}>
+                      {CATEGORIES.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
+                    </select>
+                    <select className="field" value={aiPriority ?? inc.ai.priority} disabled={inc.ai.state !== "pendiente" || inc.status === "cerrada"} onChange={(e) => setAiPriority(e.target.value as PriorityId)}>
+                      {PRIORITIES.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
+                    </select>
+                  </div>
                   <p className="text-muted-foreground">{inc.ai.rationale}</p>
+                  {inc.ai.state === "pendiente" ? (
+                    <div className="flex flex-wrap gap-2">
+                      <button className="btn btn-primary" disabled={inc.status === "cerrada"} onClick={() => run(() => s.applyAiSuggestion(inc.id, aiCategory ?? inc.ai!.category, aiPriority ?? inc.ai!.priority), "Clasificación aplicada")}>Aceptar y aplicar</button>
+                      <button className="btn btn-outline" disabled={inc.status === "cerrada"} onClick={() => run(() => s.dismissAiSuggestion(inc.id), "Sugerencia descartada")}>Descartar</button>
+                    </div>
+                  ) : (
+                    <p className="font-medium text-muted-foreground">{inc.ai.state === "aceptada" ? "Clasificación aplicada por una persona." : "Sugerencia descartada."}</p>
+                  )}
                 </div>
               ) : (
-                <p className="mt-2 flex gap-2 text-xs text-muted-foreground"><Bot className="size-4 shrink-0" /> Próximamente: sugerencia de categoría y prioridad con justificación. Solo asiste; las decisiones siempre las toma una persona.</p>
+                <p className="mt-2 flex gap-2 text-xs text-muted-foreground"><Bot className="size-4 shrink-0" /> No hay sugerencia disponible. Solo asiste; las decisiones siempre las toma una persona.</p>
               )}
             </section>
           )}
