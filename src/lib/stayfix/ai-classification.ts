@@ -16,9 +16,10 @@ const normalizeDescription = (description: string) =>
 
 function localClassification(description: string): ValidatedAiClassification {
   const text = normalizeDescription(description);
-  const critical = /olor a gas|fuga de gas|posible fuga de gas|humo|incendio|fuego|peligro electrico grave|riesgo inmediato para personas|emergencia de seguridad/.test(text);
+    const hasGasRisk = GAS_RISK_PATTERN.test(text);
+  const critical = hasGasRisk || /humo|incendio|fuego|peligro electrico grave|riesgo inmediato para personas|emergencia de seguridad/.test(text);
 
-  if (critical && /gas/.test(text)) {
+  if (hasGasRisk) {
     return {
       category: "gas",
       priority: "critica",
