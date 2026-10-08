@@ -18,7 +18,26 @@ function isRecord(value: unknown): value is Record<string, unknown> {
  * Invalid or out-of-catalog responses return null so the normal incident flow
  * can continue without trusting arbitrary model output.
  */
+export async function requestAiClassification(description: string): Promise<ValidatedAiClassification | null> {
+  const endpoint = import.meta.env.VITE_AI_CLASSIFICATION_URL;
+  if (!endpoint) return null;
+
+  try {
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ description }),
+      signal: AbortSignal.timeout(8000),
+    });
+    if (!response.ok) return null;
+    return parseAiClassification(await response.json());
+  } catch {
+    return null;
+  }
+}
+
 export function parseAiClassification(payload: unknown): ValidatedAiClassification | null {
+
   let value = payload;
 
   if (typeof payload === "string") {

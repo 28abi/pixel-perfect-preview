@@ -4,6 +4,8 @@ import { category, priority, status } from "./config";
 import { buildSeed, CURRENT_USER, PROPERTIES, USERS } from "./seed";
 import type { HistoryType, Incident, Role, Stay, User } from "./types";
 import { canTransition } from "./workflow";
+import { requestAiClassification } from "./ai-classification";
+
 
 // Local data layer. Every mutation goes through these actions so it can later be swapped for backend calls.
 const KEY = "stayfix:v1";
@@ -21,7 +23,8 @@ interface Ctx {
   incidents: Incident[];
   user: (id: string | null) => User | undefined;
   property: (id: string) => (typeof PROPERTIES)[number];
-  createIncident: (input: { stayId: string; description: string; category: CategoryId }) => Incident;
+    createIncident: (input: { stayId: string; description: string; category: CategoryId }) => Promise<Incident>;
+
   assign: (id: string, userId: string) => void;
   setPriority: (id: string, p: PriorityId) => void;
   setCategory: (id: string, c: CategoryId) => void;
@@ -73,7 +76,8 @@ export function StayFixProvider({ children }: { children: ReactNode }) {
     const get = (id: string) => data.incidents.find((i) => i.id === id)!;
     return {
       role, setRole, me, users: USERS, stays: data.stays, incidents: data.incidents, user, property,
-      createIncident: ({ stayId, description, category: cat }) => {
+            createIncident: async ({ stayId, description, category: cat }) => {
+
         const stay = data.stays.find((s) => s.id === stayId)!;
         const max = Math.max(1000, ...data.incidents.map((i) => Number(i.number.slice(3))));
         const at = nowIso();
@@ -85,9 +89,26 @@ export function StayFixProvider({ children }: { children: ReactNode }) {
           history: [{ id: uid(), type: "creada", userId: me.id, at, detail: "Incidencia reportada por el huésped" }],
           ai: null, // future: automated suggestion of category/priority with rationale
         };
-        setData((d) => ({ ...d, incidents: [inc, ...d.incidents] }));
+                setData((d) => ({ ...d, incidents: [inc, ...d.incidents] }));
+
+        const suggestion = await requestAiClassification(description);
+        if (suggestion) {
+          const ai: Incident["ai"] = {
+            category: suggestion.category,
+            priority: suggestion.priority,
+            rationale: suggestion.rationale,
+            state: "pendiente",
+          };
+          setData((d) => ({
+            ...d,
+            incidents: d.incidents.map((item) => item.id === inc.id ? { ...item, ai } : item),
+          }));
+          return { ...inc, ai };
+        }
+
         return inc;
       },
+
             assign: (id, userId) => {
         if (role === "guardia" && userId !== me.id) return "Un guardia solo puede asignarse la incidencia a sí mismo";
         if (role !== "director" && role !== "guardia") return "No tienes permiso para asignar incidencias";

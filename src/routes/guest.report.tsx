@@ -24,7 +24,8 @@ function Report() {
         className="panel space-y-5 p-6"
         onSubmit={(e) => {
           e.preventDefault();
-          const inc = createIncident({ stayId, description: desc.trim(), category: cat });
+                    const inc = await createIncident({ stayId, description: desc.trim(), category: cat });
+
           toast.success(`Incidencia ${inc.number} registrada`);
           navigate({ to: "/guest/incidents/$id", params: { id: inc.id } });
         }}
