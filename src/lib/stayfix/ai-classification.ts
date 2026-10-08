@@ -59,14 +59,15 @@ function localClassification(description: string): ValidatedAiClassification {
 
 function applySafetyOverrides(description: string, suggestion: ValidatedAiClassification): ValidatedAiClassification {
   const text = normalizeDescription(description);
-  const critical = /olor a gas|fuga de gas|posible fuga de gas|humo|incendio|fuego|peligro electrico grave|riesgo inmediato para personas|emergencia de seguridad/.test(text);
+    const hasGasRisk = GAS_RISK_PATTERN.test(text);
+  const critical = hasGasRisk || /humo|incendio|fuego|peligro electrico grave|riesgo inmediato para personas|emergencia de seguridad/.test(text);
   if (!critical) return suggestion;
 
   return {
     ...suggestion,
-    category: /gas/.test(text) ? "gas" : /electrico/.test(text) ? "electricidad" : suggestion.category,
+    category: hasGasRisk ? "gas" : /electrico/.test(text) ? "electricidad" : suggestion.category,
     priority: "critica",
-    rationale: /gas/.test(text)
+    rationale: hasGasRisk
       ? "El olor a gas puede indicar una fuga y representa un riesgo potencial para la seguridad de las personas."
       : "La descripción contiene señales de riesgo inmediato para personas o instalaciones y requiere atención urgente.",
   };
