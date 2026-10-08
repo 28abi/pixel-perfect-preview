@@ -7,15 +7,13 @@ export const TRANSITIONS: Record<StatusId, { to: StatusId; roles: Role[] }[]> = 
   nueva: [{ to: "asignada", roles: ["guardia", "director"] }],
   asignada: [{ to: "en_proceso", roles: ["guardia"] }],
   en_proceso: [{ to: "resuelta", roles: ["guardia"] }],
-  resuelta: [
-    { to: "pendiente_validacion", roles: ["guardia"] },
-    { to: "en_proceso", roles: ["guardia"] },
+    resuelta: [
+    { to: "cerrada", roles: ["guardia", "director"] },
+    { to: "en_proceso", roles: ["guardia", "director"] },
   ],
-  pendiente_validacion: [
-    { to: "cerrada", roles: ["director"] },
-    { to: "en_proceso", roles: ["director"] },
+  cerrada: [
+    { to: "en_proceso", roles: ["guardia", "director"] },
   ],
-  cerrada: [],
 };
 
 export function canTransition(inc: Incident, to: StatusId, role: Role): string | null {
