@@ -32,9 +32,7 @@ interface Ctx {
   dismissAiSuggestion: (id: string) => string | null;
   transition: (id: string, to: StatusId) => string | null;
   saveResolution: (id: string, text: string) => void;
-  validate: (id: string, notes: string) => void;
-  reject: (id: string, notes: string) => void;
-  addComment: (id: string, text: string) => void;
+    addComment: (id: string, text: string) => void;
   addEvidence: (id: string, name: string) => void;
   resetDemo: () => void;
 }
