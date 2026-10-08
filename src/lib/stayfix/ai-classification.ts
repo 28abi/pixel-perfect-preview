@@ -9,14 +9,17 @@ export interface ValidatedAiClassification {
 const categoryIds = new Set<CategoryId>(CATEGORIES.map((item) => item.id));
 const priorityIds = new Set<PriorityId>(PRIORITIES.map((item) => item.id));
 
+const GAS_RISK_PATTERN = /\b(?:gas|olor\s+a\s+gas|huele(?:\s+\w+){0,3}\s+a\s+gas|fuga\s+de\s+gas|escape\s+de\s+gas|posible\s+fuga)\b/;
+
 const normalizeDescription = (description: string) =>
   description.normalize("NFD").replace(/[\\u0300-\\u036f]/g, "").toLowerCase();
 
 function localClassification(description: string): ValidatedAiClassification {
   const text = normalizeDescription(description);
-  const critical = /olor a gas|fuga de gas|posible fuga de gas|humo|incendio|fuego|peligro electrico grave|riesgo inmediato para personas|emergencia de seguridad/.test(text);
+    const hasGasRisk = GAS_RISK_PATTERN.test(text);
+  const critical = hasGasRisk || /humo|incendio|fuego|peligro electrico grave|riesgo inmediato para personas|emergencia de seguridad/.test(text);
 
-  if (critical && /gas/.test(text)) {
+  if (hasGasRisk) {
     return {
       category: "gas",
       priority: "critica",
@@ -57,14 +60,15 @@ function localClassification(description: string): ValidatedAiClassification {
 
 function applySafetyOverrides(description: string, suggestion: ValidatedAiClassification): ValidatedAiClassification {
   const text = normalizeDescription(description);
-  const critical = /olor a gas|fuga de gas|posible fuga de gas|humo|incendio|fuego|peligro electrico grave|riesgo inmediato para personas|emergencia de seguridad/.test(text);
+    const hasGasRisk = GAS_RISK_PATTERN.test(text);
+  const critical = hasGasRisk || /humo|incendio|fuego|peligro electrico grave|riesgo inmediato para personas|emergencia de seguridad/.test(text);
   if (!critical) return suggestion;
 
   return {
     ...suggestion,
-    category: /gas/.test(text) ? "gas" : /electrico/.test(text) ? "electricidad" : suggestion.category,
+    category: hasGasRisk ? "gas" : /electrico/.test(text) ? "electricidad" : suggestion.category,
     priority: "critica",
-    rationale: /gas/.test(text)
+    rationale: hasGasRisk
       ? "El olor a gas puede indicar una fuga y representa un riesgo potencial para la seguridad de las personas."
       : "La descripción contiene señales de riesgo inmediato para personas o instalaciones y requiere atención urgente.",
   };
