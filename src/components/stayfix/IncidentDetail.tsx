@@ -29,7 +29,7 @@ export function IncidentDetail({ id, role }: { id: string; role: Role }) {
     if (err) toast.error(err); else toast.success(ok);
   };
 
-  const transitions = TRANSITIONS[inc.status].filter((t) => t.roles.includes(role) && !(role === "director" && t.to === "en_proceso") && t.to !== "asignada");
+    const transitions = TRANSITIONS[inc.status].filter((t) => t.roles.includes(role) && t.to !== "asignada");
 
   return (
     <div>
