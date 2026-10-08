@@ -122,8 +122,27 @@ export function StayFixProvider({ children }: { children: ReactNode }) {
           status: i.status === "nueva" ? "asignada" : i.status,
         }), { type: re ? "reasignada" : "asignada", detail: re ? `Reasignada a ${name}` : `Asignada a ${name}` });
       },
-      setPriority: (id, p) => mutate(id, (i) => ({ ...i, priority: p }), { type: "prioridad", detail: `Prioridad cambiada a ${priority(p).label}` }),
+            setPriority: (id, p) => mutate(id, (i) => ({ ...i, priority: p }), { type: "prioridad", detail: `Prioridad cambiada a ${priority(p).label}` }),
       setCategory: (id, c) => mutate(id, (i) => ({ ...i, category: c }), { type: "categoria", detail: `Categoría cambiada a ${category(c).label}` }),
+      applyAiSuggestion: (id, nextCategory, nextPriority) => {
+        if (role !== "director" && role !== "guardia") return "No tienes permiso para decidir sobre la sugerencia";
+        const inc = get(id);
+        if (!inc.ai || inc.ai.state !== "pendiente") return "La sugerencia ya no está pendiente";
+        mutate(id, (i) => ({
+          ...i,
+          category: nextCategory,
+          priority: nextPriority,
+          ai: i.ai ? { ...i.ai, category: nextCategory, priority: nextPriority, state: "aceptada" } : null,
+        }), { type: "categoria", detail: `Clasificación asistida aplicada: ${category(nextCategory).label} · ${priority(nextPriority).label}` });
+        return null;
+      },
+      dismissAiSuggestion: (id) => {
+        if (role !== "director" && role !== "guardia") return "No tienes permiso para descartar la sugerencia";
+        const inc = get(id);
+        if (!inc.ai || inc.ai.state !== "pendiente") return "La sugerencia ya no está pendiente";
+        mutate(id, (i) => ({ ...i, ai: i.ai ? { ...i.ai, state: "descartada" } : null }));
+        return null;
+      },
       transition: (id, to) => {
         const err = canTransition(get(id), to, role);
         if (err) return err;
