@@ -150,10 +150,12 @@ export function StayFixProvider({ children }: { children: ReactNode }) {
         if (err) return err;
         const at = nowIso();
         mutate(id, (i) => ({
-          ...i, status: to,
+                    ...i,
+          status: to,
           startedAt: to === "en_proceso" && !i.startedAt ? at : i.startedAt,
-          resolvedAt: to === "resuelta" ? at : i.resolvedAt,
-          closedAt: to === "cerrada" ? at : i.closedAt,
+          resolvedAt: to === "resuelta" ? at : to === "en_proceso" && i.status === "cerrada" ? null : i.resolvedAt,
+          closedAt: to === "cerrada" ? at : to === "en_proceso" && i.status === "cerrada" ? null : i.closedAt,
+          resolution: to === "en_proceso" && i.status === "cerrada" ? null : i.resolution,
         }), {
           type: to === "en_proceso" && !get(id).startedAt ? "inicio" : to === "cerrada" ? "cierre" : "estado",
           detail: `Estado: ${status(get(id).status).label} → ${status(to).label}`,
