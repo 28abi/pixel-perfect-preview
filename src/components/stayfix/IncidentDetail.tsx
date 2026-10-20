@@ -17,6 +17,7 @@ export function IncidentDetail({ id, role }: { id: string; role: Role }) {
   const [resolution, setResolution] = useState(inc?.resolution ?? "");
       const [aiCategory, setAiCategory] = useState<CategoryId | null>(null);
   const [aiPriority, setAiPriority] = useState<PriorityId | null>(null);
+  const [zoom, setZoom] = useState<string | null>(null);
   if (!inc) return <Empty>Incidencia no encontrada.</Empty>;
 
   const staff = role !== "huesped";
@@ -225,6 +226,12 @@ export function IncidentDetail({ id, role }: { id: string; role: Role }) {
           )}
         </aside>
       </div>
+      {zoom && (
+        <div role="dialog" aria-label="Evidencia ampliada" className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/80 p-4" onClick={() => setZoom(null)}>
+          <img src={zoom} alt="Evidencia ampliada" className="max-h-full max-w-full rounded-md object-contain" />
+          <button type="button" className="btn btn-outline absolute right-4 top-4" onClick={() => setZoom(null)}>Cerrar</button>
+        </div>
+      )}
     </div>
   );
 }

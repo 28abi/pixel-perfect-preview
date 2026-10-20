@@ -20,7 +20,8 @@ export type HistoryType =
 
 export interface HistoryEvent { id: string; type: HistoryType; userId: string; at: string; detail: string }
 export interface Comment { id: string; userId: string; text: string; at: string }
-export interface Evidence { id: string; name: string; userId: string; at: string }
+/** dataUrl: compressed image stored inline (persisted with the incident). */
+export interface Evidence { id: string; name: string; userId: string; at: string; dataUrl?: string }
 
 /** Placeholder for a future AI assistant. It only suggests; humans decide. */
 export interface AiSuggestion {
