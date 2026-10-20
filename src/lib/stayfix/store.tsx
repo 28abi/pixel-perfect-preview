@@ -134,6 +134,7 @@ export function StayFixProvider({ children }: { children: ReactNode }) {
           ...i, assigneeId: userId, assignedAt: nowIso(),
           status: i.status === "nueva" ? "asignada" : i.status,
         }), { type: re ? "reasignada" : "asignada", detail: re ? `Reasignada a ${name}` : `Asignada a ${name}` });
+        return null;
       },
             setPriority: (id, p) => mutate(id, (i) => ({ ...i, priority: p }), { type: "prioridad", detail: `Prioridad cambiada a ${priority(p).label}` }),
       setCategory: (id, c) => mutate(id, (i) => ({ ...i, category: c }), { type: "categoria", detail: `Categoría cambiada a ${category(c).label}` }),
