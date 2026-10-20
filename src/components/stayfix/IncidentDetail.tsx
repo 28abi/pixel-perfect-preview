@@ -181,7 +181,16 @@ export function IncidentDetail({ id, role }: { id: string; role: Role }) {
           <section className="panel p-5 text-sm">
             <h2 className="mb-2 flex items-center gap-1.5 font-semibold"><Paperclip className="size-4" /> Evidencia</h2>
             {inc.evidence.length ? (
-              <ul className="space-y-1.5 text-xs">{inc.evidence.map((e) => <li key={e.id} className="flex justify-between gap-2"><span className="truncate font-medium">{e.name}</span><span className="text-muted-foreground">{formatDate(e.at)}</span></li>)}</ul>
+              <ul className="space-y-2 text-xs">{inc.evidence.map((e) => (
+                <li key={e.id} className="space-y-1.5">
+                  {e.dataUrl && (
+                    <button type="button" onClick={() => setZoom(e.dataUrl!)} className="block w-full overflow-hidden rounded-md border" title="Ampliar imagen">
+                      <img src={e.dataUrl} alt={e.name} className="max-h-48 w-full object-cover" />
+                    </button>
+                  )}
+                  <div className="flex justify-between gap-2"><span className="truncate font-medium">{e.name}</span><span className="text-muted-foreground">{formatDate(e.at)}</span></div>
+                </li>
+              ))}</ul>
             ) : <p className="text-xs text-muted-foreground">Sin evidencia.</p>}
           </section>
 
