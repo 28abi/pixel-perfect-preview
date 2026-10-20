@@ -17,6 +17,7 @@ export function IncidentDetail({ id, role }: { id: string; role: Role }) {
   const [resolution, setResolution] = useState(inc?.resolution ?? "");
       const [aiCategory, setAiCategory] = useState<CategoryId | null>(null);
   const [aiPriority, setAiPriority] = useState<PriorityId | null>(null);
+  const [zoom, setZoom] = useState<string | null>(null);
   if (!inc) return <Empty>Incidencia no encontrada.</Empty>;
 
   const staff = role !== "huesped";
@@ -181,7 +182,16 @@ export function IncidentDetail({ id, role }: { id: string; role: Role }) {
           <section className="panel p-5 text-sm">
             <h2 className="mb-2 flex items-center gap-1.5 font-semibold"><Paperclip className="size-4" /> Evidencia</h2>
             {inc.evidence.length ? (
-              <ul className="space-y-1.5 text-xs">{inc.evidence.map((e) => <li key={e.id} className="flex justify-between gap-2"><span className="truncate font-medium">{e.name}</span><span className="text-muted-foreground">{formatDate(e.at)}</span></li>)}</ul>
+              <ul className="space-y-2 text-xs">{inc.evidence.map((e) => (
+                <li key={e.id} className="space-y-1.5">
+                  {e.dataUrl && (
+                    <button type="button" onClick={() => setZoom(e.dataUrl!)} className="block w-full overflow-hidden rounded-md border" title="Ampliar imagen">
+                      <img src={e.dataUrl} alt={e.name} className="max-h-48 w-full object-cover" />
+                    </button>
+                  )}
+                  <div className="flex justify-between gap-2"><span className="truncate font-medium">{e.name}</span><span className="text-muted-foreground">{formatDate(e.at)}</span></div>
+                </li>
+              ))}</ul>
             ) : <p className="text-xs text-muted-foreground">Sin evidencia.</p>}
           </section>
 
@@ -216,6 +226,12 @@ export function IncidentDetail({ id, role }: { id: string; role: Role }) {
           )}
         </aside>
       </div>
+      {zoom && (
+        <div role="dialog" aria-label="Evidencia ampliada" className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/80 p-4" onClick={() => setZoom(null)}>
+          <img src={zoom} alt="Evidencia ampliada" className="max-h-full max-w-full rounded-md object-contain" />
+          <button type="button" className="btn btn-outline absolute right-4 top-4" onClick={() => setZoom(null)}>Cerrar</button>
+        </div>
+      )}
     </div>
   );
 }
