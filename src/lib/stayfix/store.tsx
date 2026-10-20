@@ -23,9 +23,9 @@ interface Ctx {
   incidents: Incident[];
   user: (id: string | null) => User | undefined;
   property: (id: string) => (typeof PROPERTIES)[number];
-    createIncident: (input: { stayId: string; description: string; category: CategoryId }) => Promise<Incident>;
+    createIncident: (input: { stayId: string; description: string; category: CategoryId; photo?: { name: string; dataUrl: string } }) => Promise<Incident>;
 
-  assign: (id: string, userId: string) => void;
+  assign: (id: string, userId: string) => string | null;
   setPriority: (id: string, p: PriorityId) => void;
     setCategory: (id: string, c: CategoryId) => void;
   applyAiSuggestion: (id: string, category: CategoryId, priority: PriorityId) => string | null;
@@ -51,7 +51,10 @@ export function StayFixProvider({ children }: { children: ReactNode }) {
       if (r) setRoleState(r);
     } catch { /* ignore */ }
   }, []);
-  useEffect(() => { localStorage.setItem(KEY, JSON.stringify(data)); }, [data]);
+  useEffect(() => {
+    try { localStorage.setItem(KEY, JSON.stringify(data)); }
+    catch { console.warn("StayFix: almacenamiento del navegador lleno; no se pudieron guardar los cambios"); }
+  }, [data]);
 
   const setRole = (r: Role) => { setRoleState(r); localStorage.setItem(KEY + ":role", r); };
   const me = USERS.find((u) => u.id === CURRENT_USER[role])!;
@@ -76,7 +79,7 @@ export function StayFixProvider({ children }: { children: ReactNode }) {
     const get = (id: string) => data.incidents.find((i) => i.id === id)!;
     return {
       role, setRole, me, users: USERS, stays: data.stays, incidents: data.incidents, user, property,
-            createIncident: async ({ stayId, description, category: cat }) => {
+            createIncident: async ({ stayId, description, category: cat, photo }) => {
 
         const stay = data.stays.find((s) => s.id === stayId)!;
         const max = Math.max(1000, ...data.incidents.map((i) => Number(i.number.slice(3))));
@@ -85,10 +88,20 @@ export function StayFixProvider({ children }: { children: ReactNode }) {
           id: uid(), number: `SF-${max + 1}`, guestId: me.id, stayId, propertyId: stay.propertyId,
           description, category: cat, priority: "media", status: "nueva", assigneeId: null,
           createdAt: at, assignedAt: null, startedAt: null, resolvedAt: null, closedAt: null,
-          resolution: null, validation: null, evidence: [], comments: [],
-          history: [{ id: uid(), type: "creada", userId: me.id, at, detail: "Incidencia reportada por el huésped" }],
+          resolution: null, validation: null,
+          evidence: photo ? [{ id: uid(), name: photo.name, userId: me.id, at, dataUrl: photo.dataUrl }] : [],
+          comments: [],
+          history: [
+            { id: uid(), type: "creada", userId: me.id, at, detail: "Incidencia reportada por el huésped" },
+            ...(photo ? [{ id: uid(), type: "evidencia" as const, userId: me.id, at, detail: `Evidencia fotográfica adjunta: ${photo.name}` }] : []),
+          ],
           ai: null, // future: automated suggestion of category/priority with rationale
         };
+        if (photo) {
+          // Verify the photo fits in browser storage before accepting the report.
+          try { localStorage.setItem(KEY, JSON.stringify({ ...data, incidents: [inc, ...data.incidents] })); }
+          catch { throw new Error("STORAGE_FULL"); }
+        }
                 setData((d) => ({ ...d, incidents: [inc, ...d.incidents] }));
 
         const suggestion = await requestAiClassification(description);
