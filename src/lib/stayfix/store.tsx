@@ -23,7 +23,7 @@ interface Ctx {
   incidents: Incident[];
   user: (id: string | null) => User | undefined;
   property: (id: string) => (typeof PROPERTIES)[number];
-    createIncident: (input: { stayId: string; description: string; category: CategoryId; photo?: { name: string; dataUrl: string } }) => Promise<Incident>;
+    createIncident: (input: { stayId: string; description: string; category: CategoryId; photo?: { name: string; dataUrl: string } | undefined }) => Promise<Incident>;
 
   assign: (id: string, userId: string) => string | null;
   setPriority: (id: string, p: PriorityId) => void;
