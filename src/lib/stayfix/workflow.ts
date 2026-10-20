@@ -11,6 +11,11 @@ export const TRANSITIONS: Record<StatusId, { to: StatusId; roles: Role[] }[]> = 
     { to: "cerrada", roles: ["guardia", "director"] },
     { to: "en_proceso", roles: ["guardia", "director"] },
   ],
+  // Legacy status kept for previously saved incidents; no transition leads here anymore.
+  pendiente_validacion: [
+    { to: "cerrada", roles: ["guardia", "director"] },
+    { to: "en_proceso", roles: ["guardia", "director"] },
+  ],
   cerrada: [
     { to: "en_proceso", roles: ["guardia", "director"] },
   ],
